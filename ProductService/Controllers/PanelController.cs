@@ -5,11 +5,10 @@ namespace ProductService.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ProductController : ControllerBase
+public class PanelController : ControllerBase
 {
-
     private readonly IProductService _productService;
-    public ProductController(IProductService productService)
+    public PanelController(IProductService productService)
     {
         _productService = productService;
     }
@@ -30,6 +29,14 @@ public class ProductController : ControllerBase
         return NoContent();
     }
 
+
+    [HttpPut("UpdateProduct")]
+    public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductModel model)
+    {
+        await _productService.UpdateProduct(model.Id, model.Name);
+        return NoContent();
+    }
+
     [HttpGet("GetAll")]
     public async Task<IActionResult> AllProduct()
     {
@@ -43,4 +50,10 @@ public class ProductController : ControllerBase
         var result = await _productService.GetProductBy(id);
         return Ok(result);
     }
+}
+
+public class UpdateProductModel
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; }
 }

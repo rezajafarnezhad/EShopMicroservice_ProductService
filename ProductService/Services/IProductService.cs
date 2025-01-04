@@ -1,12 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BasketService.MessagingBus.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using ProductService.Domain.Entities;
 using ProductService.Infrastructure;
+using ProductService.MessageBus;
+using RabbitMQ.Client;
 
 namespace ProductService.Services;
 
 public interface IProductService
 {
     Task AddProduct(ProductModel model);
+    Task UpdateProduct(Guid id, string name);
     Task<List<ProductModel>> GetAllProduct();
     Task<ProductModel> GetProductBy(Guid ProductId);
 }
@@ -15,9 +20,13 @@ public interface IProductService
 public class ProductService : IProductService
 {
     private readonly ProductDataBaseContext _context;
-    public ProductService(ProductDataBaseContext context)
+    private readonly IMessageRabbitHelper _messageRabbitHelper;
+    private readonly RabbitMqConfiguration _rabbitMqConfiguration;
+    public ProductService(ProductDataBaseContext context, IMessageRabbitHelper messageRabbitHelper, IOptions<RabbitMqConfiguration> rabbitMqConfiguration)
     {
         _context = context;
+        _messageRabbitHelper = messageRabbitHelper;
+        _rabbitMqConfiguration = rabbitMqConfiguration.Value;
     }
 
     public async Task AddProduct(ProductModel model)
@@ -34,11 +43,39 @@ public class ProductService : IProductService
         await _context.SaveChangesAsync();
     }
 
+    public async Task UpdateProduct(Guid id, string name)
+    {
+        var product = await _context.Products.FindAsync(id);
+        product.EditName(name);
+        var result = await _context.SaveChangesAsync();
+        if (result == 1)
+        {
+            var connection = await _messageRabbitHelper.CheckCreateRabbitMqConnection(_rabbitMqConfiguration.HostName,
+                _rabbitMqConfiguration.UserName, _rabbitMqConfiguration.Password);
+
+            using var channel = connection.CreateModel();
+            channel.ExchangeDeclare(exchange: "ProductUpdated", ExchangeType.Topic, true, false, null);
+
+            var message = new ProductUpdateMessage()
+            {
+                MessageId = Guid.NewGuid(),
+                ProductId = product.Id,
+                ProductName = product.Name,
+                MessageData = DateTime.Now
+            };
+            var body = _messageRabbitHelper.CreateBody(message);
+            var prop = channel.CreateBasicProperties();
+            prop.Persistent = true;
+            channel.BasicPublish(exchange: "ProductUpdated", "Product.Updated", prop, body);
+        }
+    }
+
     public async Task<List<ProductModel>> GetAllProduct()
     {
         return await _context.Products.AsNoTracking()
             .Select(c => new ProductModel()
             {
+                Id = c.Id,
                 Description = c.Description,
                 Price = c.Price,
                 CategoryId = c.CategoryId,

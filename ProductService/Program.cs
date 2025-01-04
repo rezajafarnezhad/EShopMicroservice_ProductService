@@ -1,5 +1,7 @@
+using BasketService.MessagingBus.Models;
 using Microsoft.EntityFrameworkCore;
 using ProductService.Infrastructure;
+using ProductService.MessageBus;
 using ProductService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +19,8 @@ builder.Services.AddDbContext<ProductDataBaseContext>(option =>
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService.Services.ProductService>();
-
+builder.Services.Configure<RabbitMqConfiguration>(builder.Configuration.GetSection("RabbitMq"));
+builder.Services.AddSingleton<IMessageRabbitHelper, RabbitMqMessageBusHelper>();
 
 var app = builder.Build();
 

@@ -15,4 +15,8 @@ public class Product
     public decimal Price { get; set; }
     public Guid CategoryId { get; set; }
     public Category Category { get; set; }
+
+
+
+    public void EditName(string name) => Name = name;
 }
