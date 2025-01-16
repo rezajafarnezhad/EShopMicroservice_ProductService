@@ -10,7 +10,7 @@ namespace ProductService.Services;
 
 public interface IProductService
 {
-    Task AddProduct(ProductModel model);
+    Task<Guid> AddProduct(ProductModel model);
     Task UpdateProduct(Guid id, string name);
     Task<List<ProductModel>> GetAllProduct();
     Task<ProductModel> GetProductBy(Guid ProductId);
@@ -29,7 +29,7 @@ public class ProductService : IProductService
         _rabbitMqConfiguration = rabbitMqConfiguration.Value;
     }
 
-    public async Task AddProduct(ProductModel model)
+    public async Task<Guid> AddProduct(ProductModel model)
     {
         var product = new Product()
         {
@@ -41,6 +41,7 @@ public class ProductService : IProductService
         };
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
+        return product.Id;
     }
 
     public async Task UpdateProduct(Guid id, string name)

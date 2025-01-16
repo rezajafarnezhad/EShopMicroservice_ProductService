@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35521.163 d17.12
+VisualStudioVersion = 17.12.35521.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductService", "ProductService\ProductService.csproj", "{479CB152-6046-4935-A838-480D05B8501D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{C02D108F-25A0-44C9-B0D6-426FAD98B85B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductServiceTest", "ProductServiceTest\ProductServiceTest.csproj", "{4AF7F990-4FD8-40DF-9F17-127731C9843D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductServiceComponentTest", "ProductServiceComponentTest\ProductServiceComponentTest.csproj", "{FD7D53CE-AC67-4788-B2EA-57149E339874}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +21,20 @@ Global
 		{479CB152-6046-4935-A838-480D05B8501D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{479CB152-6046-4935-A838-480D05B8501D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{479CB152-6046-4935-A838-480D05B8501D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AF7F990-4FD8-40DF-9F17-127731C9843D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AF7F990-4FD8-40DF-9F17-127731C9843D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AF7F990-4FD8-40DF-9F17-127731C9843D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AF7F990-4FD8-40DF-9F17-127731C9843D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD7D53CE-AC67-4788-B2EA-57149E339874}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD7D53CE-AC67-4788-B2EA-57149E339874}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD7D53CE-AC67-4788-B2EA-57149E339874}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD7D53CE-AC67-4788-B2EA-57149E339874}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4AF7F990-4FD8-40DF-9F17-127731C9843D} = {C02D108F-25A0-44C9-B0D6-426FAD98B85B}
+		{FD7D53CE-AC67-4788-B2EA-57149E339874} = {C02D108F-25A0-44C9-B0D6-426FAD98B85B}
 	EndGlobalSection
 EndGlobal

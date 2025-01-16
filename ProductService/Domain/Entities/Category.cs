@@ -18,5 +18,10 @@ public class Product
 
 
 
-    public void EditName(string name) => Name = name;
+    public void EditName(string name)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        Name = name;
+
+    }
 }

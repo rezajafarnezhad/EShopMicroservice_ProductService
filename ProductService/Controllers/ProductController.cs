@@ -17,7 +17,7 @@ public class ProductController : ControllerBase
     [HttpPost("CreateProduct")]
     public async Task<IActionResult> CreateProduct([FromForm] ProductModel model)
     {
-        var result = _productService.AddProduct(new ProductModel()
+        var result = await _productService.AddProduct(new ProductModel()
         {
             Price = model.Price,
             CategoryId = model.CategoryId,
@@ -27,7 +27,7 @@ public class ProductController : ControllerBase
             Name = model.Name
         });
 
-        return NoContent();
+        return Created($"/api/Product/GetProductBy/{result}", result);
     }
 
     [HttpGet("GetAll")]

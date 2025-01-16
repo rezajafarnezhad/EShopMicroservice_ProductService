@@ -6,7 +6,7 @@ namespace ProductService.Services;
 
 public interface ICategoryService
 {
-    Task AddCategory(string name);
+    Task<Guid> AddCategory(string name);
     Task<Dictionary<Guid, string>> GetAllCategories();
 }
 
@@ -19,7 +19,7 @@ public class CategoryService : ICategoryService
         _context = context;
     }
 
-    public async Task AddCategory(string name)
+    public async Task<Guid> AddCategory(string name)
     {
         var category = new Category()
         {
@@ -28,6 +28,7 @@ public class CategoryService : ICategoryService
 
         _context.Categories.Add(category);
         await _context.SaveChangesAsync();
+        return category.Id;
     }
 
     public async Task<Dictionary<Guid, string>> GetAllCategories()
