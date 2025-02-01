@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProductService.Services;
 
 namespace ProductService.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize("ProductForAdmin",Roles = "Admin")]
 public class PanelController : ControllerBase
 {
     private readonly IProductService _productService;

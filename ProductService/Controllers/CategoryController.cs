@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProductService.Services;
 
 namespace ProductService.Controllers;
@@ -14,6 +15,7 @@ public class CategoryController : ControllerBase
         _categoryService = categoryService;
     }
 
+    [Authorize("ProductForAdmin")]
     [HttpPost("CreateCategory")]
     public async Task<IActionResult> CreateCategory([FromForm] string name)
     {

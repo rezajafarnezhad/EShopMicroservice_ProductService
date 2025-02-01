@@ -43,7 +43,6 @@ public class RabbitMqMessageBusHelper : IMessageRabbitHelper
 
         return await CreateRabbitMqConnection(hostName, userName, password);
     }
-
     public byte[] CreateBody(BaseMessage message)
     {
         var json = JsonConvert.SerializeObject(message);

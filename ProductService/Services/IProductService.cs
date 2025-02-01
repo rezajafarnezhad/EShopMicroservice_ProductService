@@ -11,7 +11,7 @@ namespace ProductService.Services;
 public interface IProductService
 {
     Task<Guid> AddProduct(ProductModel model);
-    Task UpdateProduct(Guid id, string name);
+    Task<string> UpdateProduct(Guid id, string name);
     Task<List<ProductModel>> GetAllProduct();
     Task<ProductModel> GetProductBy(Guid ProductId);
 }
@@ -44,11 +44,14 @@ public class ProductService : IProductService
         return product.Id;
     }
 
-    public async Task UpdateProduct(Guid id, string name)
+    public async Task<string> UpdateProduct(Guid id, string name)
     {
         var product = await _context.Products.FindAsync(id);
         product.EditName(name);
         var result = await _context.SaveChangesAsync();
+
+        #region sendMessageToRebbiteMq
+
         if (result == 1)
         {
             var connection = await _messageRabbitHelper.CheckCreateRabbitMqConnection(_rabbitMqConfiguration.HostName,
@@ -68,7 +71,13 @@ public class ProductService : IProductService
             var prop = channel.CreateBasicProperties();
             prop.Persistent = true;
             channel.BasicPublish(exchange: "ProductUpdated", "Product.Updated", prop, body);
+
         }
+
+        #endregion
+
+
+        return product.Name;
     }
 
     public async Task<List<ProductModel>> GetAllProduct()
